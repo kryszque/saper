@@ -4,10 +4,11 @@
 
 int main(int argc, char *argv[]){
     int option;
-    if(argc > 2){
-        fprintf(stderr, "Zle podano argument wywolania!!!");
+    if(argc > 3){
+        fprintf(stderr, "Zle podano argument wywolania!!");
         exit(EXIT_FAILURE);
     }
+    printf("\n\n\t\t\t\t\tG R A  S A P E R\n\n\n");
     while((option = getopt(argc, argv,"nf:")) != -1){
         switch(option){
             case('n'):
