@@ -6,7 +6,7 @@
 
 int main(int argc, char *argv[]){
     int option;
-    char lev_choice;
+    int lev_choice;
     option = getopt(argc, argv,"nf:");
     char usr_name[20];
 
@@ -19,25 +19,28 @@ int main(int argc, char *argv[]){
                 exit(EXIT_FAILURE);
             }
             else{ 
-                printf("Wybierz poziom trudnosci (latwy - wpisz l, trudny wpisz -t, aby stworzyc wlasna plansze - wpisz w) ... ");
-                scanf(" %c",&lev_choice);
+                printf("Wybierz poziom trudnosci (latwy - wpisz 1, sredni - wpisz 2, trudny - wpisz 3, aby stworzyc wlasna plansze - wpisz 4) ... ");
+                scanf(" %d",&lev_choice);
                 
-                while(lev_choice != 'l' && lev_choice != 't' && lev_choice != 'w'){
+                while(lev_choice != 1 && lev_choice != 2 && lev_choice != 3 && lev_choice != 4){
                     printf("\nNiepoprawnie podany poziom trudnosci!!! Podaj ponownie...");
-                    scanf(" %c",&lev_choice);
+                    scanf(" %d",&lev_choice);
                 }
 
                 switch (lev_choice){
-                    case('l'):
-                        printf("poziom l");
+                    case(1):
+                        printf("poziom latwy");
                         break;
                     
-                    case('t'):
-                        printf("poziom t");
+                    case(2):
+                        printf("poziom sredni");
                         break;
                     
-                    case('w'):
-                        printf("poziom w");
+                    case(3):
+                        printf("poziom trudny");
+                        break;
+                    case(4):
+                        printf("poziom wlasny");
                         break;
                 }
                 printf("\n\nPodaj swoja nazwe gracza...");
