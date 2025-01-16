@@ -5,7 +5,10 @@
 typedef struct {
     int bomb;
     char num;
+    int flag;
+    int visible;
 } Cell;
+
 Cell* create_board(int row, int col);
 void initialize_board(Cell *board, int row, int col);
 void generate_bombs(Cell *board, int bombnum, int row, int col);

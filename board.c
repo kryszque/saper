@@ -15,6 +15,8 @@ void initialize_board(Cell *board, int row, int col){
     for(int i=0; i<row*col; i++){
         board[i].num = ' ';
         board[i].bomb = 0;
+        board[i].flag = 0;
+        board[i].visible = 0;
     }
 }
 
@@ -36,7 +38,11 @@ void print_board(Cell *board, int row, int col) {
     for (int i = 0; i < row; i++) {
         printf("%2d|", i); // Indeks wiersza z ramką
         for (int j = 0; j < col; j++) {
-            printf(" %c ", board[i * col+ j].num); // Wartość z tablicy
+            if(board[i*col + j].visible){
+                printf(" %c ", board[i * col+ j].num); // Wartość z tablicy
+            }else {
+                printf("   ");
+            }
         }
         printf("|\n"); // Zamknięcie prawej ramki
     }
