@@ -9,6 +9,7 @@ int main(int argc, char *argv[]){
     int lev_choice;
     option = getopt(argc, argv,"nf:");
     char usr_name[20];
+    char *score;
 
     printf("\n\n\t\t\t\t\tG R A  S A P E R\n\n\n");
     
@@ -44,9 +45,11 @@ int main(int argc, char *argv[]){
                         break;
                 }
                 printf("\n\nPodaj swoja nazwe gracza...");
-                scanf("%s",&usr_name); //!!!!sprawdzic czy usr_name jest valid!!!!
-                add_usr(usr_name, "100", file_name);
-                display_list(file_name); //!!!!musi jeszcze sortowac i wyswietlac top5!!!!
+                scanf("%s",usr_name); //!!!!sprawdzic czy usr_name jest valid!!!!
+                printf("\n\nPodaj wynik gracza...");
+                scanf("%s",score);
+                add_usr(usr_name, score, file_name);
+                display_list(file_name);
             }  
             break;
 
