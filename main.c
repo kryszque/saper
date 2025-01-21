@@ -46,6 +46,7 @@ int main(int argc, char *argv[]){
                         saper = create_board(EASY_ROW, EASY_COL);
                         initialize_board(saper, EASY_ROW, EASY_COL);
                         generate_bombs(saper, EASY_B_NUM, EASY_ROW, EASY_COL);
+                        check_for_bombs(saper, EASY_ROW, EASY_COL);
                         print_board(saper, EASY_ROW, EASY_COL);
                         break;
                     
@@ -53,6 +54,7 @@ int main(int argc, char *argv[]){
                         saper = create_board(MED_ROW, MED_COL);
                         initialize_board(saper, MED_ROW, MED_COL);
                         generate_bombs(saper, MED_B_NUM, MED_ROW, MED_COL);
+                        check_for_bombs(saper, MED_ROW, MED_COL);
                         print_board(saper, MED_ROW, MED_COL);
                         break;
                     
@@ -60,6 +62,7 @@ int main(int argc, char *argv[]){
                         saper = create_board(HARD_ROW, HARD_COL);
                         initialize_board(saper, HARD_ROW, HARD_COL);
                         generate_bombs(saper, HARD_B_NUM, HARD_ROW, HARD_COL);
+                        check_for_bombs(saper, HARD_ROW, HARD_COL);
                         print_board(saper, HARD_ROW, HARD_COL);
                         break;
                     case(4):

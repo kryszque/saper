@@ -9,6 +9,8 @@ typedef struct {
     int visible;
 } Cell;
 
+int count_adjacent_bombs(Cell *board, int row, int col, int max_row, int max_col);
+void check_for_bombs(Cell *board, int max_row, int max_col);
 Cell* create_board(int row, int col);
 void initialize_board(Cell *board, int row, int col);
 void generate_bombs(Cell *board, int bombnum, int row, int col);
