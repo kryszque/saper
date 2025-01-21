@@ -2,11 +2,25 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "users.h"
+#include "board.h"
 #define file_name "tabela_wynikow.txt"
+
+#define EASY_ROW 9
+#define EASY_COL 9
+#define EASY_B_NUM 10
+#define MED_ROW 16
+#define MED_COL 16
+#define MED_B_NUM 40
+#define HARD_ROW 16
+#define HARD_COL 30
+#define HARD_B_NUM 99
+
+
 
 int main(int argc, char *argv[]){
     int option;
     int lev_choice;
+    Cell *saper;
     option = getopt(argc, argv,"nf:");
     char usr_name[20];
     char *score;
@@ -30,15 +44,27 @@ int main(int argc, char *argv[]){
 
                 switch (lev_choice){
                     case(1):
-                        printf("poziom latwy");
+                        saper = create_board(EASY_ROW, EASY_COL);
+                        initialize_board(saper, EASY_ROW, EASY_COL);
+                        generate_bombs(saper, EASY_B_NUM, EASY_ROW, EASY_COL);
+                        check_for_bombs(saper, EASY_ROW, EASY_COL);
+                        print_board(saper, EASY_ROW, EASY_COL);
                         break;
                     
                     case(2):
-                        printf("poziom sredni");
+                        saper = create_board(MED_ROW, MED_COL);
+                        initialize_board(saper, MED_ROW, MED_COL);
+                        generate_bombs(saper, MED_B_NUM, MED_ROW, MED_COL);
+                        check_for_bombs(saper, MED_ROW, MED_COL);
+                        print_board(saper, MED_ROW, MED_COL);
                         break;
                     
                     case(3):
-                        printf("poziom trudny");
+                        saper = create_board(HARD_ROW, HARD_COL);
+                        initialize_board(saper, HARD_ROW, HARD_COL);
+                        generate_bombs(saper, HARD_B_NUM, HARD_ROW, HARD_COL);
+                        check_for_bombs(saper, HARD_ROW, HARD_COL);
+                        print_board(saper, HARD_ROW, HARD_COL);
                         break;
                     case(4):
                         printf("poziom wlasny");
