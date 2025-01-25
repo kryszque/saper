@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include "users.h"
 #include "board.h"
+#include "file_mode.h"
 #define file_name "tabela_wynikow.txt"
 
 #define EASY_ROW 9
@@ -30,7 +31,7 @@ int main(int argc, char *argv[]){
     switch(option){ //!!!!Jesli wpisze -neee lub -fooo tez zadziala!!!!
         case('n'):
             if(argc > 2){
-                fprintf(stderr, "Zle podano argument wywolania!!!");
+                fprintf(stderr, "Zle podano argument wywolania!!!\n\n");
                 exit(EXIT_FAILURE);
             }
             else{ 
@@ -38,12 +39,13 @@ int main(int argc, char *argv[]){
                 scanf(" %d",&lev_choice);
                 
                 while(lev_choice != 1 && lev_choice != 2 && lev_choice != 3 && lev_choice != 4){
-                    printf("\nNiepoprawnie podany poziom trudnosci!!! Podaj ponownie...");
+                    printf("\n\nNiepoprawnie podany poziom trudnosci!!! Podaj ponownie...");
                     scanf(" %d",&lev_choice);
                 }
 
                 switch (lev_choice){
                     case(1):
+                        printf("\nWybrano poziom latwy");
                         saper = create_board(EASY_ROW, EASY_COL);
                         initialize_board(saper, EASY_ROW, EASY_COL);
                         generate_bombs(saper, EASY_B_NUM, EASY_ROW, EASY_COL);
@@ -52,6 +54,7 @@ int main(int argc, char *argv[]){
                         break;
                     
                     case(2):
+                        printf("\nWybrano poziom sredni");
                         saper = create_board(MED_ROW, MED_COL);
                         initialize_board(saper, MED_ROW, MED_COL);
                         generate_bombs(saper, MED_B_NUM, MED_ROW, MED_COL);
@@ -60,6 +63,7 @@ int main(int argc, char *argv[]){
                         break;
                     
                     case(3):
+                        printf("\nWybrano poziom trudny");
                         saper = create_board(HARD_ROW, HARD_COL);
                         initialize_board(saper, HARD_ROW, HARD_COL);
                         generate_bombs(saper, HARD_B_NUM, HARD_ROW, HARD_COL);
@@ -67,14 +71,15 @@ int main(int argc, char *argv[]){
                         print_board(saper, HARD_ROW, HARD_COL);
                         break;
                     case(4):
-                        printf("poziom wlasny");
+                        printf("\nWybrano poziom wlasny");
                         break;
                 }
                 printf("\n\nPodaj swoja nazwe gracza...");
                 scanf("%s",usr_name); //!!!!sprawdzic czy usr_name jest valid!!!!
-                printf("\n\nPodaj wynik gracza...");
+                printf("Podaj wynik gracza...");
                 scanf("%s",score);
                 add_usr(usr_name, score, file_name);
+                printf("\n\nTOP 5: \n\n");
                 display_list(file_name);
             }  
             break;
@@ -84,8 +89,43 @@ int main(int argc, char *argv[]){
                     fprintf(stderr, "Zle podano argument wywolania!!!");
                     exit(EXIT_FAILURE);
                 }
-            printf("Wybrano tryb sczytywania z pliku z plikiem %s\n", optarg);
+            printf("Wybrano tryb sczytywania z pliku z plikiem %s\n\n", optarg);
+            
+            FILE *in = fopen(optarg, "r");
+            if(!in){
+                fprintf(stderr, "Otwieranie pliku nie powiodlo sie!!!\n\n");
+                exit(EXIT_FAILURE);
+            }
+            
+            int row = 0;
+            int col = 0;
+            int moves_ctr = 0;
+            Cell *r_board = read_board(in, &row, &col);
+            printf("\n\nWycztana plansza:\n\n");
+            print_read_board(r_board, row, col);
+            Move * r_moves = read_moves(in, &moves_ctr);
+            int result = solve(r_board, r_moves, row, col, moves_ctr);
+            switch(result){
+                case(0):
+                    printf("\nWczytane ruchy:\n\n");
+                    print_read_moves(r_moves, moves_ctr);
+                    printf("\nOdkrywaja bombe (INT BOOM) - GRA PRZEGRANA :(\n\n");
+                    break;
+                case(1):
+                    printf("\nWczytane ruchy:\n\n");
+                    print_read_moves(r_moves, moves_ctr);
+                    printf("\nOdkrywaja wszystkie pola bez bomb i nie odkrywaja bomby - GRA WYGRANA :)\n\n");
+                    break;
+                case(2):
+                    printf("\nWczytane ruchy:\n\n");
+                    print_read_moves(r_moves, moves_ctr);
+                    printf("\nNie odkrywaja bomby, ale nie rownoczesnie nie odkrywaja wszystkich pol bez bomb - GRA NIEROZSTRZYGNIETA :/\n\n");
+                    break;
+            }
+            free(r_board);
+            free_read_moves(r_moves, moves_ctr);
             break;
+        
         default:
             fprintf(stderr, "Zle podano argument wywolania!!!");
             exit(EXIT_FAILURE);
