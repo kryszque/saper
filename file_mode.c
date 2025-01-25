@@ -49,7 +49,7 @@ ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
 }
 
 //dodac obsluge bledow!!!
-void print_read_board(Cell *read_board, int row, int col) {
+void print_read_board(Cell *read_board, int row, int col) { //col ilosc kolumn - x, row ilosc rzedow - y
     for(int i = 0; i < row; i++) {
         for(int j = 0; j < col; j++) {
             printf("%d ", read_board[i * col + j].bomb);
@@ -58,15 +58,15 @@ void print_read_board(Cell *read_board, int row, int col) {
     }
 }
 
-void free_read_moves(Move *read_moves, int *moves_ctr){
-    for(int i = 0; i < *moves_ctr; i++){
+void free_read_moves(Move *read_moves, int moves_ctr){
+    for(int i = 0; i < moves_ctr; i++){
         if(read_moves[i].move_skip != NULL) free(read_moves[i].move_skip);
     }
     free(read_moves);
 }
 
-void print_read_moves(Move *read_moves, int *moves_ctr){
-    for(int i = 0; i < *moves_ctr; i++){
+void print_read_moves(Move *read_moves, int moves_ctr){
+    for(int i = 0; i < moves_ctr; i++){
         if(read_moves[i].move_skip == NULL) printf("%c %d %d\n",read_moves[i].type, read_moves[i].x, read_moves[i].y);
         else printf("%s | ruch nr %d\n", read_moves[i].move_skip, i+1);
     }
@@ -179,4 +179,53 @@ Move *read_moves(FILE *in, int *moves_ctr){
     }while((read = getline(&line, &len, in))!=-1);
     free(line);
     return read_moves;
+}
+
+int solve(Cell *read_board, Move *read_moves, int row, int col, int moves_ctr){
+    int bombs_ctr = 0;
+    int revealed_ctr = 0;
+    int pos = -1;
+    if(!read_board || !read_moves) return 0;
+    for(int i = 0; i < moves_ctr; i++){
+        if(read_moves[i].move_skip == NULL){
+            switch (read_moves[i].type)
+            {
+            case('f'):
+                pos = (read_moves[i].y-1)*col+(read_moves[i].x-1);
+                if(read_moves[i].x > col || read_moves[i].y > row){
+                    read_moves[i].x = -1;
+                    read_moves[i].y = -1;
+                    read_moves[i].type = '\0';
+                    read_moves[i].move_skip = "Pominiecie ruchu z uwagi na niepoprawne wspolrzedne (poza plansza)";
+                    break;
+                }
+                else{
+                    read_board[pos].flag = 1;
+                }
+                break;
+            case('r'):
+                pos = (read_moves[i].y-1)*col+(read_moves[i].x-1);
+                if(read_moves[i].x > col || read_moves[i].y > row){
+                    read_moves[i].x = -1;
+                    read_moves[i].y = -1;
+                    read_moves[i].type = '\0';
+                    read_moves[i].move_skip = "Pominiecie ruchu z uwagi na niepoprawne wspolrzedne (poza plansza)";
+                    break;
+                }
+                else{
+                    if(read_board[pos].bomb == 1) return 0;
+                    read_board[pos].visible = 1;
+                }
+                break;
+            }
+        }
+    }
+    for(int j = 0; j < col*row; j++){
+        if(read_board[j].bomb == 1){
+             bombs_ctr++;
+             continue;
+        }
+        if(read_board[j].flag == 1 || read_board[j].visible == 1) revealed_ctr++;
+    }
+    return col*row - bombs_ctr == revealed_ctr ? 1 : 2;
 }
