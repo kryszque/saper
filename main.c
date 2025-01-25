@@ -5,7 +5,6 @@
 #include "board.h"
 #include "file_mode.h"
 #define file_name "tabela_wynikow.txt"
-
 #define EASY_ROW 9
 #define EASY_COL 9
 #define EASY_B_NUM 10
@@ -45,7 +44,7 @@ int main(int argc, char *argv[]){
 
                 switch (lev_choice){
                     case(1):
-                        printf("\nWybrano poziom latwy");
+                        printf("\nWybrano poziom latwy\n\n");
                         saper = create_board(EASY_ROW, EASY_COL);
                         initialize_board(saper, EASY_ROW, EASY_COL);
                         generate_bombs(saper, EASY_B_NUM, EASY_ROW, EASY_COL);
@@ -54,7 +53,7 @@ int main(int argc, char *argv[]){
                         break;
                     
                     case(2):
-                        printf("\nWybrano poziom sredni");
+                        printf("\nWybrano poziom sredni\n\n");
                         saper = create_board(MED_ROW, MED_COL);
                         initialize_board(saper, MED_ROW, MED_COL);
                         generate_bombs(saper, MED_B_NUM, MED_ROW, MED_COL);
@@ -63,7 +62,7 @@ int main(int argc, char *argv[]){
                         break;
                     
                     case(3):
-                        printf("\nWybrano poziom trudny");
+                        printf("\nWybrano poziom trudny\n\n");
                         saper = create_board(HARD_ROW, HARD_COL);
                         initialize_board(saper, HARD_ROW, HARD_COL);
                         generate_bombs(saper, HARD_B_NUM, HARD_ROW, HARD_COL);
@@ -71,7 +70,7 @@ int main(int argc, char *argv[]){
                         print_board(saper, HARD_ROW, HARD_COL);
                         break;
                     case(4):
-                        printf("\nWybrano poziom wlasny");
+                        printf("\nWybrano poziom wlasny\n\n");
                         break;
                 }
                 printf("\n\nPodaj swoja nazwe gracza...");
