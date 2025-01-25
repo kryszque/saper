@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
     Cell *saper;
     option = getopt(argc, argv,"nf:");
     char usr_name[20];
-    char *score;
+    char score[20];
 
     printf("\n\n\t\t\t\t\tG R A  S A P E R\n\n\n");
     
@@ -130,7 +130,5 @@ int main(int argc, char *argv[]){
             exit(EXIT_FAILURE);
             break;
     }
-    
-
     return 0;
 }
