@@ -25,6 +25,10 @@ int compare(const void *a, const void *b){
 user **create_user_list(){
     user **user_list = (user**)malloc(5*sizeof(user*));
     if(!user_list){
+        for(int i = 0; i < 5; i++){
+            free(user_list[i]);
+        }
+        free(user_list);
         fprintf(stderr,"Nieudana alokacja pamieci dla user_list!!!");
         exit(EXIT_FAILURE);
     }
@@ -58,6 +62,10 @@ void display_list(char *file_name){
         
         if(ctr%5 == 0) user_list = (user**)realloc(user_list, sizeof(user*)*(ctr+5));
         if(!user_list){
+            for(int i = 0; i < ctr; i++){
+                free(user_list[i]);
+            }
+            free(user_list);
             fprintf(stderr, "Niepoprawnie realokowana pamiec dla user_list");
             exit(EXIT_FAILURE);
         }
@@ -65,6 +73,11 @@ void display_list(char *file_name){
         user *new_user = (user*)malloc(sizeof(user));
         if(!new_user){
             fprintf(stderr,"Nieudana alokacja pamieci dla new_user!!!");
+            free(new_user);
+            for(int i = 0; i < ctr; i++){
+                free(user_list[i]);
+            }
+            free(user_list);
             fclose(file);
             exit(EXIT_FAILURE);
         }
