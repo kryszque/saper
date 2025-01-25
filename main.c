@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "users.h"
+#include "file_mode.h"
 #define file_name "tabela_wynikow.txt"
 
 int main(int argc, char *argv[]){
@@ -59,7 +60,26 @@ int main(int argc, char *argv[]){
                     exit(EXIT_FAILURE);
                 }
             printf("Wybrano tryb sczytywania z pliku z plikiem %s\n", optarg);
+            
+            FILE *in = fopen(optarg, "r");
+            if(!in){
+                fprintf(stderr, "Otwieranie pliku nie powiodlo sie!!!");
+                exit(EXIT_FAILURE);
+            }
+            
+            int row = 0;
+            int col = 0;
+            int moves_ctr = 0;
+            Cell *r_board = read_board(in, &row, &col);
+            printf("\n\nWycztana plansza\n\n");
+            print_read_board(r_board, row, col);
+            Move * r_moves = read_moves(in, &moves_ctr);
+            printf("\nWczytane ruchy\n\n");
+            print_read_moves(r_moves, &moves_ctr);
+            free(r_board);
+            free_read_moves(r_moves, &moves_ctr);
             break;
+        
         default:
             fprintf(stderr, "Zle podano argument wywolania!!!");
             exit(EXIT_FAILURE);

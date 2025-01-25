@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "board.h"
+#include "file_mode.h"
 #include <string.h>
 #include <ctype.h>
 
@@ -57,12 +58,24 @@ void print_read_board(Cell *read_board, int row, int col) {
     }
 }
 
-Cell *read_board(FILE *in) {
+void free_read_moves(Move *read_moves, int *moves_ctr){
+    for(int i = 0; i < *moves_ctr; i++){
+        if(read_moves[i].move_skip != NULL) free(read_moves[i].move_skip);
+    }
+    free(read_moves);
+}
+
+void print_read_moves(Move *read_moves, int *moves_ctr){
+    for(int i = 0; i < *moves_ctr; i++){
+        if(read_moves[i].move_skip == NULL) printf("%c %d %d\n",read_moves[i].type, read_moves[i].x, read_moves[i].y);
+        else printf("%s | ruch nr %d\n", read_moves[i].move_skip, i+1);
+    }
+}
+
+Cell *read_board(FILE *in, int *row, int *col) { //plansza musi miec co najmniej 1 cyfre 0 lub 1
     char *line = NULL;
     size_t len = 0;
     ssize_t read;
-    int row = 0;
-    int col = 0;
     Cell *read_board = NULL;
 
     read = getline(&line, &len, in);
@@ -71,10 +84,10 @@ Cell *read_board(FILE *in) {
         return NULL;
     }
 
-    col = strlen(line);
-    if (line[col-1] == '\n') col--;
+    *col = strlen(line);
+    if (line[*col-1] == '\n') (*col)--;
 
-    read_board = malloc(col * sizeof(Cell));
+    read_board = malloc(*col * sizeof(Cell));
     if (!read_board) {
         free(line);
         return NULL;
@@ -83,25 +96,87 @@ Cell *read_board(FILE *in) {
     do {
         if (read <= 1) break;
         
-        Cell *temp = realloc(read_board, (row + 1) * col * sizeof(Cell));
+        Cell *temp = realloc(read_board, (*row + 1) * *col * sizeof(Cell));
         if (!temp) {
             free(read_board);
             free(line);
+            fprintf(stderr,"Nieudana alokacja dla read_board!!!");
             return NULL;
         }
         read_board = temp;
 
-        for(int i = 0; i < col; i++) {
+        for(int i = 0; i < *col; i++) {
             if (i < strlen(line) && isdigit(line[i])) {
-                read_board[row * col + i].bomb = line[i] - '0';
+                read_board[*row * *col + i].bomb = line[i] - '0';
             } else {
-                read_board[row * col + i].bomb = 0;
+                read_board[*row * *col + i].bomb = 0;
             }
         }
-        row++;
+        (*row)++;
     } while ((read = getline(&line, &len, in)) != -1);
 
-    print_read_board(read_board, row, col);
     free(line);
     return read_board;
+}
+
+Move *read_moves(FILE *in, int *moves_ctr){
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    Move *read_moves = NULL;
+
+    read = getline(&line, &len, in);
+    if (read == -1) {
+        free(line);
+        return NULL;
+    }
+
+    read_moves = malloc(sizeof(Move));
+    if(!read_moves){
+        fprintf(stderr, "Nieudana alokacja pamieci dla read_moves!!!");
+        free(line);
+        return NULL;
+    }
+
+    do{
+        Move *temp = realloc(read_moves, (*moves_ctr+1) * sizeof(Move));
+        if(!temp){
+            free(read_moves);
+            free(line);
+            fprintf(stderr,"Nieudana alokacja dla read_moves!!!");
+            return NULL;
+        }
+        read_moves = temp;
+        
+        if(line[0] == 'f' || line[0] == 'r'){
+            read_moves[*moves_ctr].type = line[0];
+            read_moves[*moves_ctr].move_skip = NULL;
+        }
+        
+        else{
+            read_moves[*moves_ctr].type = '\0';
+            read_moves[*moves_ctr].x = -1;
+            read_moves[*moves_ctr].y = -1;
+            read_moves[*moves_ctr].move_skip = "Pominiecie ruchu z uwagi na niepoprawny typ ruchu";
+            (*moves_ctr)++;
+            continue;
+        }
+        
+        if(isdigit(line[1]) && isdigit(line[2])){
+            read_moves[*moves_ctr].x = line[1] - '0';
+            read_moves[*moves_ctr].y = line[2] - '0';
+            (*moves_ctr)++;
+        }
+        else{
+            read_moves[*moves_ctr].type = '\0';
+            read_moves[*moves_ctr].x = -1;
+            read_moves[*moves_ctr].y = -1;
+            read_moves[*moves_ctr].move_skip = "Pominiecie ruchu z uwagi na niepoprawne wspolrzedne";
+            (*moves_ctr)++;
+            continue;
+        }
+
+    }while((read = getline(&line, &len, in))!=-1);
+    free(line);
+    return read_moves;
 }
