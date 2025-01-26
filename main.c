@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <time.h>
 #include "users.h"
 #include "board.h"
 #include "file_mode.h"
 #include "engine.h"
-#include "time.h"
 #define file_name "tabela_wynikow.txt"
 #define EASY_ROW 9
 #define EASY_COL 9
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]){
     char usr_name[20];
     char score[20];
 
-    printf("\n\n\t\t\t\t\tG R A  S A P E R\n\n\n");
+    printf("\n\n\t\t\t\t\t\tG R A  S A P E R\n\n\n");
 
     switch(option){ //!!!!Jesli wpisze -neee lub -fooo tez zadziala!!!!
         case('n'):
@@ -37,18 +37,21 @@ int main(int argc, char *argv[]){
                 exit(EXIT_FAILURE);
             }
             else{
-                printf("Wybierz poziom trudnosci (latwy - wpisz 1, sredni - wpisz 2, trudny - wpisz 3, aby stworzyc wlasna plansze - wpisz 4) ... ");
-                scanf(" %d",&lev_choice);
-
-                while(lev_choice != 1 && lev_choice != 2 && lev_choice != 3 && lev_choice != 4){
-                    printf("\n\nNiepoprawnie podany poziom trudnosci!!! Podaj ponownie...");
-                    scanf(" %d",&lev_choice);
+                while (1) {
+                    printf("Wybierz poziom trudnosci (latwy - wpisz 1, sredni - wpisz 2, trudny - wpisz 3, aby stworzyc wlasna plansze - wpisz 4): ");
+                    if (scanf("%d", &lev_choice) == 1 && (lev_choice == 1 || lev_choice == 2 || lev_choice == 3 || lev_choice == 4)) {
+                        break; // Jeśli odczytano poprawną wartość, przerwij pętlę
+                    } else {
+                        printf("\nNiepoprawnie podany poziom trudnosci! Sprobuj ponownie.\n");
+                        while (getchar() != '\n'); // Oczyść strumień wejścia
+                    }
                 }
+            }
 
                 switch (lev_choice){
                     case(1):
-                        printf("\nWybrano poziom latwy\n\n");
                         saper = create_board(EASY_ROW, EASY_COL);
+                        set_multiplier(1);
                         initialize_board(saper, EASY_ROW, EASY_COL);
                         generate_bombs(saper, EASY_B_NUM, EASY_ROW, EASY_COL);
                         check_for_bombs(saper, EASY_ROW, EASY_COL);
@@ -57,8 +60,8 @@ int main(int argc, char *argv[]){
                         break;
 
                     case(2):
-                        printf("\nWybrano poziom sredni\n\n");
                         saper = create_board(MED_ROW, MED_COL);
+                        set_multiplier(2);
                         initialize_board(saper, MED_ROW, MED_COL);
                         generate_bombs(saper, MED_B_NUM, MED_ROW, MED_COL);
                         check_for_bombs(saper, MED_ROW, MED_COL);
@@ -67,8 +70,8 @@ int main(int argc, char *argv[]){
                         break;
 
                     case(3):
-                        printf("\nWybrano poziom trudny\n\n");
                         saper = create_board(HARD_ROW, HARD_COL);
+                        set_multiplier(3);
                         initialize_board(saper, HARD_ROW, HARD_COL);
                         generate_bombs(saper, HARD_B_NUM, HARD_ROW, HARD_COL);
                         check_for_bombs(saper, HARD_ROW, HARD_COL);
@@ -76,7 +79,18 @@ int main(int argc, char *argv[]){
                         game(saper, HARD_COL, HARD_ROW);
                         break;
                     case(4):
-                        printf("\nWybrano poziom wlasny\n\n");
+                        int custom_row;
+                        int custom_col;
+                        int custom_bombs;
+                        printf("Podaj wielkosc planszy (wiersze kolumny) i ilosc bomb: ");
+                        scanf("%d %d %d", &custom_row, &custom_col, &custom_bombs);
+                        saper = create_board(custom_row, custom_col);
+                        set_multiplier(2);
+                        initialize_board(saper, custom_row, custom_col);
+                        generate_bombs(saper, custom_bombs, custom_row, custom_col);
+                        check_for_bombs(saper, custom_row, custom_col);
+                        print_board(saper, custom_row, custom_col);
+                        game(saper, custom_col, custom_row);
                         break;
                 }
                 printf("\n\nPodaj swoja nazwe gracza...");
@@ -86,7 +100,7 @@ int main(int argc, char *argv[]){
                 add_usr(usr_name, score, file_name);
                 printf("\n\nTOP 5: \n\n");
                 display_list(file_name);
-            }  
+             
             break;
 
         case('f'):
