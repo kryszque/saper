@@ -13,15 +13,15 @@ Cell* create_board(int row, int col) {
 
 int count_adjacent_bombs(Cell *board, int row, int col, int max_row, int max_col) { // counts the amount of bombs around current field
     int bomb_count = 0;
-    
+
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
             if (i == 0 && j == 0) continue;
-            
+
             int new_row = row + i;
             int new_col = col + j;
-            
-            if (new_row >= 0 && new_row < max_row && 
+
+            if (new_row >= 0 && new_row < max_row &&
                 new_col >= 0 && new_col < max_col) {
                 if (board[new_row * max_col + new_col].bomb == 1) {
                     bomb_count++;
@@ -29,7 +29,7 @@ int count_adjacent_bombs(Cell *board, int row, int col, int max_row, int max_col
             }
         }
     }
-    
+
     return bomb_count;
 }
 
@@ -40,9 +40,9 @@ void check_for_bombs(Cell *board, int max_row, int max_col) {
                 board[i * max_col + j].num = 'B';
                 continue;
             }
-            
+
             int nearby_bombs = count_adjacent_bombs(board, i, j, max_row, max_col);
-            
+
             board[i * max_col + j].num = nearby_bombs > 0 ? nearby_bombs + '0' : ' ';
         }
     }
@@ -77,14 +77,18 @@ void print_board(Cell *board, int row, int col) {
         printf("%2d|", i);  // Row index with border
         for (int j = 0; j < col; j++) {
             printf(" ");  // Leading space
-            if (board[i * col + j].visible) {
-                if (board[i * col + j].bomb) {
-                    printf("B");
-                } else {
-                    printf("%c", board[i * col + j].num);
-                }
+            if (board[i * col + j].flag == 1) {
+              printf("F");
             } else {
-                printf(".");  // Hidden cell
+              if (board[i * col + j].visible) {
+                if (board[i * col + j].bomb) {
+                  printf("B");
+                } else {
+                  printf("%c", board[i * col + j].num);
+                }
+              } else {
+                printf("."); // Hidden cell
+              }
             }
             printf(" ");  // Trailing space
         }
@@ -124,6 +128,5 @@ int is_valid(Cell *board,  int max_cols, int row, int col){
             }
         }
     }
-    return (counter == 9) ? -1 : 1; 
+    return (counter == 9) ? -1 : 1;
 }
-

@@ -4,6 +4,8 @@
 #include "users.h"
 #include "board.h"
 #include "file_mode.h"
+#include "engine.h"
+#include "time.h"
 #define file_name "tabela_wynikow.txt"
 #define EASY_ROW 9
 #define EASY_COL 9
@@ -18,6 +20,7 @@
 
 
 int main(int argc, char *argv[]){
+    srand(time(NULL));
     int option;
     int lev_choice;
     Cell *saper;
@@ -26,17 +29,17 @@ int main(int argc, char *argv[]){
     char score[20];
 
     printf("\n\n\t\t\t\t\tG R A  S A P E R\n\n\n");
-    
+
     switch(option){ //!!!!Jesli wpisze -neee lub -fooo tez zadziala!!!!
         case('n'):
             if(argc > 2){
                 fprintf(stderr, "Zle podano argument wywolania!!!\n\n");
                 exit(EXIT_FAILURE);
             }
-            else{ 
+            else{
                 printf("Wybierz poziom trudnosci (latwy - wpisz 1, sredni - wpisz 2, trudny - wpisz 3, aby stworzyc wlasna plansze - wpisz 4) ... ");
                 scanf(" %d",&lev_choice);
-                
+
                 while(lev_choice != 1 && lev_choice != 2 && lev_choice != 3 && lev_choice != 4){
                     printf("\n\nNiepoprawnie podany poziom trudnosci!!! Podaj ponownie...");
                     scanf(" %d",&lev_choice);
@@ -50,8 +53,9 @@ int main(int argc, char *argv[]){
                         generate_bombs(saper, EASY_B_NUM, EASY_ROW, EASY_COL);
                         check_for_bombs(saper, EASY_ROW, EASY_COL);
                         print_board(saper, EASY_ROW, EASY_COL);
+                        game(saper, EASY_COL, EASY_ROW);
                         break;
-                    
+
                     case(2):
                         printf("\nWybrano poziom sredni\n\n");
                         saper = create_board(MED_ROW, MED_COL);
@@ -59,8 +63,9 @@ int main(int argc, char *argv[]){
                         generate_bombs(saper, MED_B_NUM, MED_ROW, MED_COL);
                         check_for_bombs(saper, MED_ROW, MED_COL);
                         print_board(saper, MED_ROW, MED_COL);
+                        game(saper, MED_COL, MED_ROW);
                         break;
-                    
+
                     case(3):
                         printf("\nWybrano poziom trudny\n\n");
                         saper = create_board(HARD_ROW, HARD_COL);
@@ -68,6 +73,7 @@ int main(int argc, char *argv[]){
                         generate_bombs(saper, HARD_B_NUM, HARD_ROW, HARD_COL);
                         check_for_bombs(saper, HARD_ROW, HARD_COL);
                         print_board(saper, HARD_ROW, HARD_COL);
+                        game(saper, HARD_COL, HARD_ROW);
                         break;
                     case(4):
                         printf("\nWybrano poziom wlasny\n\n");
