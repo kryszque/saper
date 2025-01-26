@@ -19,6 +19,7 @@
 
 
 
+
 int main(int argc, char *argv[]){
     srand(time(NULL));
     int option;
@@ -47,6 +48,7 @@ int main(int argc, char *argv[]){
                 switch (lev_choice){
                     case(1):
                         saper = create_board(EASY_ROW, EASY_COL);
+                        set_multiplier(1);
                         initialize_board(saper, EASY_ROW, EASY_COL);
                         generate_bombs(saper, EASY_B_NUM, EASY_ROW, EASY_COL);
                         check_for_bombs(saper, EASY_ROW, EASY_COL);
@@ -56,6 +58,7 @@ int main(int argc, char *argv[]){
 
                     case(2):
                         saper = create_board(MED_ROW, MED_COL);
+                        set_multiplier(2);
                         initialize_board(saper, MED_ROW, MED_COL);
                         generate_bombs(saper, MED_B_NUM, MED_ROW, MED_COL);
                         check_for_bombs(saper, MED_ROW, MED_COL);
@@ -65,6 +68,7 @@ int main(int argc, char *argv[]){
 
                     case(3):
                         saper = create_board(HARD_ROW, HARD_COL);
+                        set_multiplier(3);
                         initialize_board(saper, HARD_ROW, HARD_COL);
                         generate_bombs(saper, HARD_B_NUM, HARD_ROW, HARD_COL);
                         check_for_bombs(saper, HARD_ROW, HARD_COL);
@@ -73,6 +77,17 @@ int main(int argc, char *argv[]){
                         break;
                     case(4):
                         printf("poziom wlasny");
+                        int custom_row;
+                        int custom_col;
+                        int custom_bombs;
+                        scanf("Podaj wielkość planszy (wiersze kolumny) i ilość bomb... %d %d %d ", &custom_row, &custom_col, &custom_bombs);
+                        saper = create_board(custom_row, custom_col);
+                        set_multiplier(2);
+                        initialize_board(saper, custom_row, custom_col);
+                        generate_bombs(saper, custom_bombs, custom_row, custom_col);
+                        check_for_bombs(saper, custom_row, custom_col);
+                        print_board(saper, custom_row, custom_col);
+                        game(saper, custom_col, custom_row);
                         break;
                 }
                 printf("\n\nPodaj swoja nazwe gracza...");

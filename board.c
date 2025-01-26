@@ -11,6 +11,20 @@ Cell* create_board(int row, int col) {
     return board;
 }
 
+void free_board(Cell *board) {
+    if (board != NULL) {
+        free(board);
+    }
+}
+
+void clear_console() {
+    #ifdef _WIN32
+    system("cls");
+    #else
+    system("clear");
+    #endif
+}
+
 int count_adjacent_bombs(Cell *board, int row, int col, int max_row, int max_col) { // counts the amount of bombs around current field
     int bomb_count = 0;
 
@@ -48,6 +62,7 @@ void check_for_bombs(Cell *board, int max_row, int max_col) {
     }
 }
 
+
 void initialize_board(Cell *board, int row, int col){
     for(int i=0; i<row*col; i++){
         board[i].num = ' ';
@@ -77,7 +92,7 @@ void print_board(Cell *board, int row, int col) {
         printf("%2d|", i);  // Row index with border
         for (int j = 0; j < col; j++) {
             printf(" ");  // Leading space
-            if (board[i * col + j].flag == 1) {
+            if (board[i * col + j].flag == 1 && board[i * col + j].visible == 0) {
               printf("F");
             } else {
               if (board[i * col + j].visible) {
