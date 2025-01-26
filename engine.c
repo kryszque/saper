@@ -138,7 +138,12 @@ void move(Cell *board, int x, int y, int max_col, int max_row, char order){
             reveal(board, x, y, max_col, max_row);
             break;
         case 'f':
-            board[x*max_col + y].flag = 1;
+            if(board[x*max_col + y].flag == 0){
+                board[x*max_col + y].flag = 1;
+            } else {
+                board[x*max_col + y].flag = 0;
+            }
+
             break;
     }
 }
