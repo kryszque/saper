@@ -22,11 +22,15 @@
 
 int main(int argc, char *argv[]){
     srand(time(NULL));
+    int score;
     int option;
     int lev_choice;
     Cell *saper;
     option = getopt(argc, argv,"nf:");
     char usr_name[20];
+    int custom_row;
+    int custom_col;
+    int custom_bombs;
 
     printf("\n\n\t\t\t\t\tG R A  S A P E R\n\n\n");
 
@@ -53,7 +57,7 @@ int main(int argc, char *argv[]){
                         generate_bombs(saper, EASY_B_NUM, EASY_ROW, EASY_COL);
                         check_for_bombs(saper, EASY_ROW, EASY_COL);
                         print_board(saper, EASY_ROW, EASY_COL);
-                        game(saper, EASY_COL, EASY_ROW);
+                        score = game(saper, EASY_COL, EASY_ROW, EASY_B_NUM);
                         break;
 
                     case(2):
@@ -63,7 +67,7 @@ int main(int argc, char *argv[]){
                         generate_bombs(saper, MED_B_NUM, MED_ROW, MED_COL);
                         check_for_bombs(saper, MED_ROW, MED_COL);
                         print_board(saper, MED_ROW, MED_COL);
-                        game(saper, MED_COL, MED_ROW);
+                        score = game(saper, MED_COL, MED_ROW, MED_B_NUM);
                         break;
 
                     case(3):
@@ -73,27 +77,28 @@ int main(int argc, char *argv[]){
                         generate_bombs(saper, HARD_B_NUM, HARD_ROW, HARD_COL);
                         check_for_bombs(saper, HARD_ROW, HARD_COL);
                         print_board(saper, HARD_ROW, HARD_COL);
-                        game(saper, HARD_COL, HARD_ROW);
+                        score = game(saper, HARD_COL, HARD_ROW, HARD_B_NUM);
                         break;
                     case(4):
-                        printf("poziom wlasny");
-                        int custom_row;
-                        int custom_col;
-                        int custom_bombs;
-                        scanf("Podaj wielkość planszy (wiersze kolumny) i ilość bomb... %d %d %d ", &custom_row, &custom_col, &custom_bombs);
+                        printf("Podaj wielkosc planszy (wiersze kolumny) i ilosc bomb ... ");
+                        scanf("%d %d %d", &custom_row, &custom_col, &custom_bombs);
                         saper = create_board(custom_row, custom_col);
                         set_multiplier(2);
                         initialize_board(saper, custom_row, custom_col);
                         generate_bombs(saper, custom_bombs, custom_row, custom_col);
                         check_for_bombs(saper, custom_row, custom_col);
                         print_board(saper, custom_row, custom_col);
-                        game(saper, custom_col, custom_row);
+                        score = game(saper, custom_col, custom_row, custom_bombs);
                         break;
                 }
                 printf("\n\nPodaj swoja nazwe gracza...");
-                scanf("%s",usr_name); //!!!!sprawdzic czy usr_name jest valid!!!!
-                add_usr(usr_name, "100", file_name);
-                display_list(file_name); //!!!!musi jeszcze sortowac i wyswietlac top5!!!!
+                scanf("%s",usr_name);
+                printf("Podaj wynik gracza...");
+                char c_score;
+                c_score = score + '0';
+                add_usr(usr_name, &c_score, file_name);
+                printf("\n\nTOP 5: \n\n");
+                display_list(file_name);
             }
             break;
 
