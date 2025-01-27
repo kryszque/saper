@@ -76,7 +76,7 @@ void print_board(Cell *board, int row, int col) {
     // Print column indices
     printf("   ");  // Space for row indices
     for (int j = 0; j < col; j++) {
-        printf("%2d ", j);
+        printf("%2d ", j+1);
     }
     printf("\n");
 
@@ -89,7 +89,7 @@ void print_board(Cell *board, int row, int col) {
 
     // Print board content
     for (int i = 0; i < row; i++) {
-        printf("%2d|", i);  // Row index with border
+        printf("%2d|", i+1);  // Row index with border
         for (int j = 0; j < col; j++) {
             printf(" ");  // Leading space
             if (board[i * col + j].flag == 1 && board[i * col + j].visible == 0) {

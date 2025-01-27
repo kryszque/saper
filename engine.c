@@ -39,10 +39,10 @@ void set_multiplier(int level) {
             multiplier = 1.0f;
             break;
         case 2: // Średni
-            multiplier = 1.5f;
+            multiplier = 2.0f;
             break;
         case 3: // Trudny
-            multiplier = 2.0f;
+            multiplier = 3.0f;
             break;
         default: // Domyślnie łatwy
             multiplier = 1.0f;
@@ -51,7 +51,6 @@ void set_multiplier(int level) {
 }
 
 void update_board_on_first_move(Cell *board, int row, int col, int max_row, int max_col) {
-    srand(time(NULL));
 
     if (board[row * max_col + col].bomb == 1) {
         board[row * max_col + col].bomb = 0;
@@ -105,7 +104,7 @@ void reveal_whole_map(Cell *board, int max_col, int max_row) {
 }
 
 int count_score(int moves) {
-    return ((moves * multiplier)-1);
+    return (moves * multiplier);
 }
 
 void reveal(Cell *board, int row, int col, int max_col, int max_row) {
@@ -148,12 +147,17 @@ void move(Cell *board, int x, int y, int max_col, int max_row, char order){
     }
 }
 
-void game(Cell *board, int max_col, int max_row) {
+int game(Cell *board, int max_col, int max_row, int total_bombs) {
+    srand(time(NULL));
     int first_move = 1;
     int moves = 0;
+    int curr_score = 0;
     while (game_loop == 1) {
         clear_console();
         print_board(board, max_row, max_col);
+        printf("\n");
+        printf("Current score: %d", curr_score);
+        printf("\n");
         if (is_game_over(board, max_row, max_col)) {
             game_loop = 0; // Koniec gry
             break;
@@ -164,14 +168,18 @@ void game(Cell *board, int max_col, int max_row) {
         printf("Napisz f x y, aby dodac flage lub r x y, aby odslonic pole w x, y.\n");
         scanf("%c %d %d", &order, &y, &x);
         if (first_move == 1) {
-            update_board_on_first_move(board, x, y, max_row, max_col);
+            update_board_on_first_move(board, x-1, y-1, max_row, max_col);
             first_move = 0;
+            move(board, x-1, y-1, max_col, max_row, order);
             continue;
+
         }
         moves++;
-        move(board, x, y, max_col, max_row, order);
+        move(board, x-1, y-1, max_col, max_row, order);
+        curr_score += multiplier;
     }
     reveal_whole_map(board, max_col, max_row);
     print_board(board, max_row, max_col);
-    printf("Koniec gry! Twoj wynik to: %d\n", count_score(moves));
+    printf("Koniec gry! Twoj wynik to: %d\n", curr_score);
+    return count_score(moves);
 }
