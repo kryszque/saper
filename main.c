@@ -23,6 +23,7 @@
 int main(int argc, char *argv[]){
     srand(time(NULL));
     int score;
+    char c_score[20];
     int option;
     int lev_choice;
     Cell *saper;
@@ -94,9 +95,8 @@ int main(int argc, char *argv[]){
                 printf("\n\nPodaj swoja nazwe gracza...");
                 scanf("%s",usr_name);
                 printf("Podaj wynik gracza...");
-                char c_score;
-                c_score = score + '0';
-                add_usr(usr_name, &c_score, file_name);
+                sprintf(c_score, "%d", score);
+                add_usr(usr_name, c_score, file_name);
                 printf("\n\nTOP 5: \n\n");
                 display_list(file_name);
             }
